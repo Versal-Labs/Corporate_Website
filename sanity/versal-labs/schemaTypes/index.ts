@@ -6,6 +6,7 @@ import { postType } from "./postType"
 import { authorType } from "./authorType"
 import { portfolioType } from "./portfolioType"
 import { productType } from "./productType"
+import { careerType } from "./careerType"
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   blockContentType,
@@ -14,4 +15,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   authorType,
   portfolioType,
   productType,
+  careerType,
 ];

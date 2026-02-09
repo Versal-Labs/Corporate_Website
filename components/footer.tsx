@@ -145,6 +145,16 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => {
+                    window.location.href = "/careers"
+                  }}
+                  className="hover:text-white transition-colors text-left"
+                >
+                  Careers
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
                     window.location.href = "/blog"
                   }}
                   className="hover:text-white transition-colors text-left"

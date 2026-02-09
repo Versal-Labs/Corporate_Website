@@ -51,6 +51,34 @@ export const PRODUCTS_QUERY = groq`*[_type == "product" && defined(slug.current)
 
 export const PRODUCT_QUERY = groq`*[_type == "product" && slug.current == $slug][0]`
 
+// Career queries
+export const CAREERS_QUERY = groq`*[_type == "career" && isActive == true] | order(coalesce(postedAt, _createdAt) desc){
+  _id,
+  title,
+  "slug": slug.current,
+  department,
+  location,
+  employmentType,
+  experienceLevel,
+  remoteOption,
+  summary,
+  description,
+  responsibilities,
+  requirements,
+  perks,
+  salaryRange,
+  applicationUrl,
+  applicationEmail,
+  closingDate,
+  postedAt,
+  isActive
+}`
+
+export const CAREER_QUERY = groq`*[_type == "career" && slug.current == $slug][0]{
+  ...,
+  "slug": slug.current
+}`
+
 // Featured content queries
 export const FEATURED_PRODUCTS_QUERY = groq`*[_type == "product" && featured == true] | order(_createdAt desc)[0...3]{
   _id,

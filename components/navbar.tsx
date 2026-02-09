@@ -46,11 +46,19 @@ export default function Navbar() {
     { name: "Services", href: "services" },
     { name: "Products", href: "products" },
     { name: "Portfolio", href: "portfolio" },
+    { name: "Careers", href: "careers" },
     { name: "About", href: "about" },
     { name: "Contact", href: "contact" },
   ]
 
   const scrollToSection = (sectionId: string) => {
+    // Careers is a dedicated page
+    if (sectionId === "careers") {
+      window.location.href = "/careers"
+      setIsOpen(false)
+      return
+    }
+
     // Check if we're on the home page
     const isHomePage = window.location.pathname === "/"
 

@@ -9,6 +9,8 @@ import {
   PRODUCT_QUERY,
   FEATURED_PRODUCTS_QUERY,
   FEATURED_PORTFOLIO_QUERY,
+  CAREERS_QUERY,
+  CAREER_QUERY,
 } from "../sanity/versal-labs/lib/queries"
 
 
@@ -258,6 +260,55 @@ export async function getFeaturedProducts() {
   }
 }
 
+// Career functions
+export async function getCareers() {
+  if (!isSanityConfigured()) {
+    console.warn("Sanity not configured, returning empty careers array")
+    return []
+  }
+
+  if (!client) {
+    console.error("Sanity client not initialized")
+    return []
+  }
+
+  try {
+    return await fetchWithRetry(() => client.fetch(CAREERS_QUERY))
+  } catch (error: any) {
+    console.error("Error fetching careers:", error)
+
+    if (error?.message?.includes("CORS") || error?.message?.includes("Access-Control")) {
+      console.error("CORS Error: Make sure your domain is added to Sanity CORS origins")
+    }
+
+    return []
+  }
+}
+
+export async function getCareer(slug: string) {
+  if (!isSanityConfigured()) {
+    console.warn("Sanity not configured, returning null for career")
+    return null
+  }
+
+  if (!client) {
+    console.error("Sanity client not initialized")
+    return null
+  }
+
+  try {
+    return await fetchWithRetry(() => client.fetch(CAREER_QUERY, { slug }))
+  } catch (error: any) {
+    console.error("Error fetching career:", error)
+
+    if (error?.message?.includes("CORS") || error?.message?.includes("Access-Control")) {
+      console.error("CORS Error: Make sure your domain is added to Sanity CORS origins")
+    }
+
+    return null
+  }
+}
+
 // Mock data functions for when Sanity is not configured
 function getMockPortfolioData(): PortfolioItem[] {
   return [
@@ -393,4 +444,31 @@ export interface Product {
   }
   launchDate?: string
   featured?: boolean
+}
+
+export interface Career {
+  _id: string
+  title: string
+  slug: string
+  department?: string
+  location?: string
+  employmentType?: string
+  experienceLevel?: string
+  remoteOption?: string
+  summary?: string
+  description?: any
+  responsibilities?: string[]
+  requirements?: string[]
+  perks?: string[]
+  salaryRange?: {
+    min?: number
+    max?: number
+    currency?: string
+    period?: string
+  }
+  applicationUrl?: string
+  applicationEmail?: string
+  closingDate?: string
+  postedAt?: string
+  isActive?: boolean
 }
