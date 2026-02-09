@@ -1,0 +1,348 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+html {
+  scroll-behavior: auto; /* Disable smooth scroll to prevent conflicts */
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  overflow-x: hidden;
+}
+
+/* Remove ALL CSS transitions to prevent conflicts with GSAP */
+*,
+*::before,
+*::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Only allow GSAP-controlled animations */
+.gsap-element {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #2563eb, #7c3aed);
+}
+
+/* Prevent layout shifts */
+.section-container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading state */
+.loading {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Loaded state */
+.loaded {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Prevent flash of unstyled content */
+.animate-in {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Performance optimizations */
+.floating-element {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Action Button Hover Effects */
+.action-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: translateZ(0);
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-button:hover::before {
+  left: 100%;
+}
+
+.action-button:hover {
+  transform: translateY(-2px) scale(1.02) translateZ(0);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3), 0 10px 10px -5px rgba(139, 92, 246, 0.2);
+}
+
+.action-button:active {
+  transform: translateY(0) scale(0.98) translateZ(0);
+}
+
+/* Get Started Button Specific */
+.get-started-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.get-started-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.get-started-btn:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+.get-started-btn:hover {
+  transform: translateY(-3px) scale(1.05) translateZ(0);
+  box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.4), 0 15px 15px -5px rgba(139, 92, 246, 0.3);
+}
+
+/* Running Light Border Animation */
+@keyframes running-light {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.running-border {
+  position: relative;
+  background: linear-gradient(45deg, #1f2937, #374151);
+  border-radius: 1rem;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.running-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.8),
+    rgba(139, 92, 246, 0.8),
+    rgba(34, 197, 94, 0.8),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: running-light 3s linear infinite;
+  border-radius: 1rem;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+.running-border:hover::before {
+  animation-play-state: paused;
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.9),
+    rgba(139, 92, 246, 0.9),
+    rgba(34, 197, 94, 0.9),
+    rgba(59, 130, 246, 0.9)
+  );
+}
+
+.running-border-content {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  border-radius: calc(1rem - 2px);
+  z-index: 2;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.running-border:hover .running-border-content {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Product Card Hover Effects */
+.product-card {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: translateZ(0);
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02) translateZ(0);
+}
+
+.product-card-image {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: translateZ(0);
+}
+
+.product-card:hover .product-card-image {
+  transform: scale(1.05) translateZ(0);
+}
+
+/* Service Card Glow Effect */
+.service-card {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: translateZ(0);
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 1rem;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.service-card:hover::after {
+  opacity: 1;
+}
+
+.service-card:hover {
+  transform: translateY(-4px) scale(1.02) translateZ(0);
+  box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.2);
+}
+
+/* Icon Bounce Animation */
+.icon-bounce {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.service-card:hover .icon-bounce {
+  transform: translateY(-2px) scale(1.1) translateZ(0);
+  animation: subtle-bounce 0.6s ease-in-out;
+}
+
+@keyframes subtle-bounce {
+  0%, 100% { transform: translateY(-2px) scale(1.1) translateZ(0); }
+  50% { transform: translateY(-6px) scale(1.15) translateZ(0); }
+}
+
+/* Contact Form Hover Effects */
+.form-input {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.form-input:focus {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.2);
+}
+
+/* Magnetic Effect for Buttons */
+.magnetic-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+}
+
+.magnetic-btn:hover {
+  transform: translateZ(0);
+}
+
+/* Pulse Effect for Status Badges */
+.status-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-badge:hover::before {
+  left: 100%;
+}
