@@ -1,41 +1,25 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ExternalLink, Github, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getFeaturedPortfolio, type PortfolioItem } from "@/lib/sanity"
+import type { PortfolioItem } from "@/lib/sanity"
 import { urlForImage } from "../sanity/versal-labs/lib/image"
+import Link from "next/link"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-export default function PortfolioSection() {
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([])
-  const [loading, setLoading] = useState(true)
-
+export default function PortfolioSection({ initialItems }: { initialItems: PortfolioItem[] }) {
+  const portfolioItems = initialItems
   const sectionRef = useRef<HTMLElement>(null)
   const cardsRef = useRef<HTMLDivElement[]>([])
 
   useEffect(() => {
-    async function loadPortfolio() {
-      try {
-        const items = await getFeaturedPortfolio()
-        setPortfolioItems(items)
-      } catch (error) {
-        console.error("Error loading portfolio:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadPortfolio()
-  }, [])
-
-  useEffect(() => {
-    if (loading || portfolioItems.length === 0) return
+    if (portfolioItems.length === 0) return
 
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter(Boolean)
@@ -66,24 +50,7 @@ export default function PortfolioSection() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [loading, portfolioItems])
-
-  if (loading) {
-    return (
-      <section id="portfolio" className="py-20 bg-gray-800/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-              Our Portfolio
-            </h2>
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
+  }, [portfolioItems])
 
   if (portfolioItems.length === 0) {
     return (
@@ -128,6 +95,9 @@ export default function PortfolioSection() {
                   <img
                     src={urlForImage(item.mainImage)?.width(400).height(200).url() || "/placeholder.svg"}
                     alt={item.mainImage.alt || item.title}
+                    width={400}
+                    height={200}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -202,23 +172,21 @@ export default function PortfolioSection() {
                 <div className="flex gap-3 pt-4 border-t border-gray-700">
                   {item.projectUrl && (
                     <Button
+                      asChild
                       size="sm"
                       className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-xs"
-                      onClick={() => window.open(item.projectUrl, "_blank")}
                     >
-                      <ExternalLink className="w-3 h-3 mr-1" />
-                      View Live
+                      <a href={item.projectUrl} target="_blank" rel="noopener noreferrer"><ExternalLink className="w-3 h-3 mr-1" />View {item.title}</a>
                     </Button>
                   )}
                   {item.githubUrl && (
                     <Button
+                      asChild
                       size="sm"
                       variant="outline"
                       className="border-gray-600 hover:border-purple-400 hover:bg-purple-400/10 bg-transparent text-xs"
-                      onClick={() => window.open(item.githubUrl, "_blank")}
                     >
-                      <Github className="w-3 h-3 mr-1" />
-                      Code
+                      <a href={item.githubUrl} target="_blank" rel="noopener noreferrer"><Github className="w-3 h-3 mr-1" />View source code</a>
                     </Button>
                   )}
                 </div>
@@ -229,10 +197,10 @@ export default function PortfolioSection() {
 
         <div className="text-center mt-12">
           <Button
-            onClick={() => (window.location.href = "/portfolio")}
+            asChild
             className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-300"
           >
-            View All Projects
+            <Link href="/portfolio">View All Projects</Link>
           </Button>
         </div>
       </div>

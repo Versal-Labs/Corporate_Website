@@ -10,13 +10,27 @@ const imageBuilder = isSanityConfigured()
     })
   : null
 
-export const urlForImage = (source: Image) => {
+const fallbackImageUrl = {
+  width() {
+    return this
+  },
+  height() {
+    return this
+  },
+  auto() {
+    return this
+  },
+  fit() {
+    return this
+  },
+  url() {
+    return "/placeholder.svg?height=400&width=600&text=Image+Placeholder"
+  },
+}
+
+export const urlForImage = (source: Image): any => {
   if (!imageBuilder || !source) {
-    return {
-      url: () => "/placeholder.svg?height=400&width=600&text=Image+Placeholder",
-      width: () => ({ url: () => "/placeholder.svg?height=400&width=600&text=Image+Placeholder" }),
-      height: () => ({ url: () => "/placeholder.svg?height=400&width=600&text=Image+Placeholder" }),
-    }
+    return fallbackImageUrl
   }
 
   return imageBuilder?.image(source).auto("format").fit("max")

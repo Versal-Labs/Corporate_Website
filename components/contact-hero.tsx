@@ -9,14 +9,14 @@ import { Mail, Phone, MapPin, Send, Linkedin, Twitter, Github, MessageCircle, Ch
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { submitContactForm } from "@/app/actions/contact"
+import { submitContactForm, type ContactFormState } from "@/app/actions/contact"
 import { useFormTracking } from "@/hooks/use-analytics"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-const initialState = {
+const initialState: ContactFormState = {
   success: false,
   message: "",
   errors: {},
@@ -336,7 +336,7 @@ export default function ContactHero() {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2 text-lg">Email</h4>
-                    <a href="mailto:mohamed.sakeel@versallabs.lk">mohamed.sakeel@versallabs.lk</a>
+                    <a href="mailto:hello@versallabs.lk">hello@versallabs.lk</a>
                   </div>
                 </div>
 
@@ -357,11 +357,9 @@ export default function ContactHero() {
                   <div>
                     <h4 className="font-semibold mb-2 text-lg">Address</h4>
                     <p className="text-gray-400">
-                      105/24, Kent Road
+                      105, 24 Kent Rd
                 <br />
-                Dematagoda, Colombo 09
-                <br />
-                Sri Lanka
+                Colombo 00900, Sri Lanka
                     </p>
                   </div>
                 </div>
@@ -374,47 +372,21 @@ export default function ContactHero() {
                 Follow Us
               </h3>
               <div className="flex gap-4">
-                <a
-  href="https://www.linkedin.com/company/versallabs"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button
-    size="icon"
-    variant="outline"
-    className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl"
-  >
-    <Linkedin className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
-  </Button>
-</a>
-
-<a
-  href="https://twitter.com/versallabs"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button
-    size="icon"
-    variant="outline"
-    className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl"
-  >
-    <Twitter className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
-  </Button>
-</a>
-
-<a
-  href="https://github.com/Versal-Labs"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button
-    size="icon"
-    variant="outline"
-    className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl"
-  >
-    <Github className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
-  </Button>
-</a>
+                <Button asChild size="icon" variant="outline" className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl">
+                  <a aria-label="Versal Labs on LinkedIn" href="https://www.linkedin.com/company/versallabs/" target="_blank" rel="noopener noreferrer">
+                    <Linkedin className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
+                  </a>
+                </Button>
+                <Button asChild size="icon" variant="outline" className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl">
+                  <a aria-label="Versal Labs on X" href="https://x.com/versallabs" target="_blank" rel="noopener noreferrer">
+                    <Twitter className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
+                  </a>
+                </Button>
+                <Button asChild size="icon" variant="outline" className="w-14 h-14 border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10 group bg-transparent transition-all duration-500 rounded-xl">
+                  <a aria-label="Versal Labs on GitHub" href="https://github.com/Versal-Labs" target="_blank" rel="noopener noreferrer">
+                    <Github className="w-6 h-6 group-hover:text-cyan-400 transition-colors duration-300" />
+                  </a>
+                </Button>
 
               </div>
             </div>

@@ -1,86 +1,27 @@
-"use client"
+import HomePage from "@/components/home-page"
+import { getFeaturedPortfolio, getFeaturedProducts, getRecentPosts } from "@/lib/sanity"
+import { createPageMetadata } from "@/lib/seo"
 
-import { useEffect, useState } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Navbar from "@/components/navbar"
-import Hero from "@/components/hero"
-import AnimatedTextSection from "@/components/animated-text-section"
-import ServicesHero from "@/components/services-hero"
-import ProductsHero from "@/components/products-hero"
-import Portfolio from "@/components/portfolio"
-import ProductsSection from "@/components/products-section"
-import PortfolioSection from "@/components/portfolio-section"
-import AboutHero from "@/components/about-hero"
-import ContactHero from "@/components/contact-hero"
-import RecentBlogs from "@/components/recent-blogs"
-import Footer from "@/components/footer"
-import ScrollProgress from "@/components/scroll-progress"
-import HashNavigation from "@/components/hash-navigation"
-import { usePageTracking } from "@/hooks/use-analytics"
+export const revalidate = 3600
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
-}
+export const metadata = createPageMetadata({
+  title: "Custom Software & AI Development Company in Sri Lanka",
+  description:
+    "Versal Labs is a software company in Colombo delivering custom software, AI automation, ERP systems, cloud engineering, and digital products in Sri Lanka and worldwide.",
+  path: "/",
+  keywords: [
+    "software company Sri Lanka",
+    "custom software development company Sri Lanka",
+    "AI development company Sri Lanka",
+    "software development Colombo",
+  ],
+})
 
-export default function Home() {
-  const [isPageLoaded, setIsPageLoaded] = useState(false)
-
-  // Track page views
-  usePageTracking()
-
-  useEffect(() => {
-    // Prevent any animations until page is fully loaded
-    const handleLoad = () => {
-      setIsPageLoaded(true)
-
-      // Small delay to ensure everything is rendered
-      setTimeout(() => {
-        ScrollTrigger.refresh()
-      }, 100)
-    }
-
-    if (document.readyState === "complete") {
-      handleLoad()
-    } else {
-      window.addEventListener("load", handleLoad)
-    }
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("load", handleLoad)
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
-
-  // Don't render animations until page is loaded
-  if (!isPageLoaded) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <img src="/logo-icon.svg" alt="Versal Labs" className="w-16 h-16 mx-auto mb-4 animate-pulse" />
-          <div className="text-lg">Loading...</div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="bg-gray-900 text-white overflow-x-hidden">
-      <ScrollProgress />
-      <HashNavigation />
-      <Navbar />
-      <main>
-        <Hero />
-        <AnimatedTextSection />
-        <ServicesHero />
-        <ProductsSection />
-        <PortfolioSection />
-        <AboutHero />
-        <RecentBlogs />
-        <ContactHero />
-      </main>
-      <Footer />
-    </div>
-  )
+export default async function Page() {
+  const [recentPosts, featuredProducts, featuredPortfolio] = await Promise.all([
+    getRecentPosts(),
+    getFeaturedProducts(),
+    getFeaturedPortfolio(),
+  ])
+  return <HomePage recentPosts={recentPosts} featuredProducts={featuredProducts} featuredPortfolio={featuredPortfolio} />
 }

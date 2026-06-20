@@ -1,56 +1,54 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { MapPin, Briefcase, Clock, Globe, ArrowRight } from "lucide-react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ScrollProgress from "@/components/scroll-progress"
 import { Button } from "@/components/ui/button"
 import { getCareers, type Career } from "@/lib/sanity"
+import { createPageMetadata, serializeJsonLd, siteConfig } from "@/lib/seo"
 
-export default function CareersPage() {
-  const [roles, setRoles] = useState<Career[]>([])
-  const [loading, setLoading] = useState(true)
+export const revalidate = 1800
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getCareers()
-        setRoles(data)
-      } catch (error) {
-        console.error("Error loading careers:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+export const metadata = createPageMetadata({
+  title: "Software & AI Careers in Colombo, Sri Lanka",
+  description: "Explore software engineering, AI, design, and cloud career opportunities at Versal Labs in Colombo, Sri Lanka.",
+  path: "/careers",
+  keywords: ["software jobs Colombo", "software engineering careers Sri Lanka", "AI jobs Sri Lanka"],
+})
 
-    load()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen">
-        <ScrollProgress />
-        <Navbar />
-        <div className="pt-32 pb-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                Careers at Versal Labs
-              </h1>
-              <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    )
-  }
+export default async function CareersPage() {
+  const roles: Career[] = await getCareers()
+  const jobPostingSchemas = roles.map((role) => ({
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: role.title,
+    description: role.summary || `${role.title} opportunity at Versal Labs in Colombo, Sri Lanka.`,
+    datePosted: role.postedAt,
+    validThrough: role.closingDate,
+    employmentType: role.employmentType?.replaceAll("-", "_").toUpperCase(),
+    hiringOrganization: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      sameAs: siteConfig.url,
+      logo: `${siteConfig.url}/logo-full.svg`,
+    },
+    ...(role.remoteOption === "remote"
+      ? {
+          jobLocationType: "TELECOMMUTE",
+          applicantLocationRequirements: { "@type": "Country", name: "Sri Lanka" },
+        }
+      : {
+          jobLocation: {
+            "@type": "Place",
+            address: { "@type": "PostalAddress", ...siteConfig.address },
+          },
+        }),
+  }))
 
   return (
     <div className="bg-gray-900 text-white min-h-screen">
+      {jobPostingSchemas.map((schema, index) => (
+        <script key={roles[index]._id} type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }} />
+      ))}
       <ScrollProgress />
       <Navbar />
 
@@ -155,22 +153,24 @@ export default function CareersPage() {
                         <div className="flex gap-3">
                           {role.applicationUrl && (
                             <Button
+                              asChild
                               size="sm"
                               className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 group"
-                              onClick={() => window.open(role.applicationUrl!, "_blank")}
                             >
-                              Apply Now
-                              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                              <a href={role.applicationUrl} target="_blank" rel="noopener noreferrer">
+                                Apply Now
+                                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                              </a>
                             </Button>
                           )}
                           {!role.applicationUrl && role.applicationEmail && (
                             <Button
+                              asChild
                               size="sm"
                               variant="outline"
                               className="border-gray-600 hover:border-cyan-400 hover:bg-cyan-400/10"
-                              onClick={() => (window.location.href = `mailto:${role.applicationEmail}`)}
                             >
-                              Email Your CV
+                              <a href={`mailto:${role.applicationEmail}`}>Email Your CV</a>
                             </Button>
                           )}
                         </div>

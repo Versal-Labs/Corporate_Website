@@ -98,23 +98,23 @@ export function ProductCard({ product, showImage = true }: ProductCardProps) {
 
         <div className="flex gap-4 pt-2">
           {product.productUrl && (
-            <Button className="action-button bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 group relative overflow-hidden">
-              <span className="relative z-10 flex items-center">
-                Learn More
+            <Button asChild className="action-button bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 group relative overflow-hidden">
+              <a href={product.productUrl} target="_blank" rel="noopener noreferrer" className="relative z-10 flex items-center">
+                Learn about {product.title}
                 <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </span>
+              </a>
             </Button>
           )}
           {product.demoUrl && product.status === "live" && (
             <Button
+              asChild
               variant="outline"
               className="action-button border-gray-600 hover:border-green-400 hover:bg-green-400/10 bg-transparent group relative overflow-hidden"
-              onClick={() => window.open(product.demoUrl, "_blank")}
             >
-              <span className="relative z-10 flex items-center">
+              <a href={product.demoUrl} target="_blank" rel="noopener noreferrer" className="relative z-10 flex items-center">
                 <Star className="mr-2 w-4 h-4 group-hover:text-green-400 transition-colors duration-300" />
                 Try Demo
-              </span>
+              </a>
             </Button>
           )}
         </div>

@@ -67,23 +67,21 @@ export function PortfolioCard({ item }: { item: PortfolioItem }) {
           <div className="flex gap-3 pt-4 border-t border-gray-700">
             {item.projectUrl && (
               <Button
+                asChild
                 size="sm"
                 className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-xs"
-                onClick={() => window.open(item.projectUrl, "_blank")}
               >
-                <ExternalLink className="w-3 h-3 mr-1" />
-                View Live
+                <a href={item.projectUrl} target="_blank" rel="noopener noreferrer"><ExternalLink className="w-3 h-3 mr-1" />View Live</a>
               </Button>
             )}
             {item.githubUrl && (
               <Button
+                asChild
                 size="sm"
                 variant="outline"
                 className="border-gray-600 hover:border-purple-400 hover:bg-purple-400/10 bg-transparent text-xs"
-                onClick={() => window.open(item.githubUrl, "_blank")}
               >
-                <Github className="w-3 h-3 mr-1" />
-                Code
+                <a href={item.githubUrl} target="_blank" rel="noopener noreferrer"><Github className="w-3 h-3 mr-1" />Code</a>
               </Button>
             )}
           </div>

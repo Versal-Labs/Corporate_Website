@@ -123,6 +123,7 @@ export default function CookieBanner() {
                     </p>
                   </div>
                   <Button
+                    aria-label="Close cookie notice"
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowBanner(false)}
@@ -177,6 +178,7 @@ export default function CookieBanner() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold text-white">Cookie Preferences</h3>
                   <Button
+                    aria-label="Close cookie preferences"
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowSettings(false)}

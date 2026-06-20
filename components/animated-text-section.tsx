@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from 'lucide-react'
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+  gsap.registerPlugin(ScrollTrigger)
 }
 
 export default function AnimatedTextSection() {
@@ -19,26 +18,7 @@ export default function AnimatedTextSection() {
   const shape1Ref = useRef<HTMLDivElement>(null)
   const shape2Ref = useRef<HTMLDivElement>(null)
   const shape3Ref = useRef<HTMLDivElement>(null)
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      gsap.to(window, {
-        duration: 1.2,
-        scrollTo: {
-          y: element,
-          offsetY: 80,
-        },
-        ease: "power2.inOut",
-      })
-    }
-  }
-
   useEffect(() => {
-    // Set loading state
-    setIsLoaded(false)
-
     const ctx = gsap.context(() => {
       // Kill any existing animations
       gsap.killTweensOf([
@@ -69,7 +49,6 @@ export default function AnimatedTextSection() {
       // Create main timeline
       const mainTl = gsap.timeline({
         paused: true,
-        onComplete: () => setIsLoaded(true),
       })
 
       // Animate shapes first
@@ -167,7 +146,6 @@ export default function AnimatedTextSection() {
 
     return () => {
       ctx.revert()
-      setIsLoaded(false)
     }
   }, [])
 
@@ -195,14 +173,14 @@ export default function AnimatedTextSection() {
       <div className="container mx-auto px-4 text-center relative z-10">
         {/* Main Animated Text */}
         <div ref={textRef} className="gsap-element mb-8">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black leading-none">
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-black leading-none">
             <span className="block bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
               Build
             </span>
             <span className="block bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               anything
             </span>
-          </h1>
+          </h2>
         </div>
 
         {/* Subtitle */}
@@ -218,12 +196,14 @@ export default function AnimatedTextSection() {
 
         {/* CTA Button */}
         <div ref={buttonRef} className="gsap-element">
-          <Button 
-            onClick={() => scrollToSection("services")}
+          <Button
+            asChild
             className="button-hover bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-lg px-8 py-4 rounded-full border-2 border-transparent hover:border-blue-400/30 group"
           >
-            Start Building
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            <a href="/services">
+              Start Building
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </a>
           </Button>
         </div>
       </div>
