@@ -4,59 +4,44 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 import CookieBanner from "@/components/cookie-banner"
 import CookieSettingsButton from "@/components/cookie-settings-button"
+import { absoluteUrl, serializeJsonLd, siteConfig } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  // Primary SEO Information
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: 'VersalLabs - Innovating the Future',
-    template: '%s | VersalLabs',
+    default: 'Custom Software & AI Development Company in Sri Lanka | Versal Labs',
+    template: '%s | Versal Labs',
   },
-  description: 'VersalLabs is a leading technology company specializing in custom software development, AI solutions, and digital transformation. We help businesses innovate and grow through cutting-edge technology and expert consultation.',
-  
-  // Keywords are a good practice but less critical than they used to be.
-  // Use a comma-separated list of relevant terms.
-  keywords: ['VersalLabs', 'software development', 'AI solutions', 'digital transformation', 'web design', 'tech consulting', 'Sri Lanka'],
-
-  // Canonical URL for preventing duplicate content issues
-  alternates: {
-    canonical: 'https://versallabs.lk',
-  },
-
- 
-
- 
-
-  // Author and other general information
-  authors: [{ name: 'VersalLabs Team', url: 'https://versallabs.lk' }],
-  creator: 'VersalLabs Team',
-  publisher: "Versal Labs",
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  authors: [{ name: 'Versal Labs Team', url: siteConfig.url }],
+  creator: 'Versal Labs Team',
+  publisher: siteConfig.name,
+  category: "technology",
 
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://versallabs.lk",
-    siteName: "Versal Labs",
-    title: "Versal Labs - Smart Code. Scalable Innovation.",
-    description:
-      "Your future-ready software partner. We craft cutting-edge solutions that transform businesses through custom development, AI integration, and scalable cloud platforms.",
+    locale: "en_LK",
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: "Custom Software & AI Development Company in Sri Lanka | Versal Labs",
+    description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Versal Labs - Smart Code. Scalable Innovation.",
-    description:
-      "Your future-ready software partner. We craft cutting-edge solutions that transform businesses through custom development, AI integration, and scalable cloud platforms.",
-    creator: "@Versal_Labs",
+    title: "Custom Software & AI Development Company in Sri Lanka | Versal Labs",
+    description: siteConfig.description,
+    creator: "@versallabs",
   },
   
   // Prevent search engines from indexing certain parts of the site (if needed)
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: true,
+      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
@@ -64,6 +49,60 @@ export const metadata: Metadata = {
   },
 
 };
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": ["Organization", "ProfessionalService"],
+  "@id": `${siteConfig.url}/#organization`,
+  name: siteConfig.name,
+  legalName: siteConfig.legalName,
+  alternateName: "VersalLabs",
+  url: siteConfig.url,
+  logo: absoluteUrl("/logo-full.svg"),
+  image: absoluteUrl("/opengraph-image"),
+  description: siteConfig.description,
+  email: siteConfig.email,
+  telephone: siteConfig.telephone,
+  address: { "@type": "PostalAddress", ...siteConfig.address },
+  areaServed: [
+    { "@type": "Country", name: "Sri Lanka" },
+    { "@type": "Place", name: "Worldwide" },
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: siteConfig.telephone,
+    email: siteConfig.email,
+    contactType: "sales and customer support",
+    areaServed: "Worldwide",
+    availableLanguage: "English",
+  },
+  sameAs: [
+    siteConfig.googleBusinessProfile,
+    siteConfig.social.linkedin,
+    siteConfig.social.x,
+    siteConfig.social.github,
+    siteConfig.social.instagram,
+  ],
+  identifier: siteConfig.googleKnowledgeGraphId,
+  knowsAbout: [
+    "Custom software development",
+    "Artificial intelligence automation",
+    "ERP software development",
+    "Cloud and DevOps consulting",
+    "SaaS product development",
+  ],
+}
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${siteConfig.url}/#website`,
+  url: siteConfig.url,
+  name: siteConfig.name,
+  description: siteConfig.description,
+  publisher: { "@id": `${siteConfig.url}/#organization` },
+  inLanguage: "en-LK",
+}
 
 export default function RootLayout({
   children,
@@ -73,6 +112,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }} />
         <style>{`
 html {
   font-family: ${GeistSans.style.fontFamily};

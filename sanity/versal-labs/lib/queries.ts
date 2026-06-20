@@ -3,12 +3,14 @@ import { groq } from "next-sanity"
 // Blog queries
 export const POSTS_QUERY = groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc) {
   _id,
+  _updatedAt,
   title,
   "slug": slug.current,
   excerpt,
   mainImage,
   publishedAt,
   readTime,
+  "author": author->{name, image, bio},
   "categories": categories[]->{
     _id,
     title,
@@ -19,6 +21,7 @@ export const POSTS_QUERY = groq`*[_type == "post" && defined(slug.current)] | or
 export const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0]{
   ...,
   "slug": slug.current,
+  "author": author->{name, image, bio},
   "categories": categories[]->{
     _id,
     title,

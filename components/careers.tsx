@@ -123,7 +123,7 @@ export default function Careers() {
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {
         const allCards = [...jobCards, ...benefitCards]
-        if (trigger.trigger && allCards.includes(trigger.trigger)) {
+        if (trigger.trigger && (allCards as Element[]).includes(trigger.trigger)) {
           trigger.kill()
         }
       })

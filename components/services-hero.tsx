@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Code, Cloud, Cog, Layers, Brain, Users } from 'lucide-react'
+import Link from "next/link"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -15,36 +16,42 @@ const services = [
     title: "Custom Development",
     description: "Tailored solutions built from the ground up",
     color: "from-blue-500 to-cyan-500",
+    href: "/services/custom-software-development",
   },
   {
     icon: Layers,
     title: "Enterprise Solutions",
     description: "Robust, scalable applications for large organizations",
     color: "from-purple-500 to-pink-500",
+    href: "/services/erp-development",
   },
   {
     icon: Cloud,
     title: "Cloud & DevOps",
     description: "Modern infrastructure and deployment practices",
     color: "from-green-500 to-teal-500",
+    href: "/services/cloud-devops",
   },
   {
     icon: Cog,
     title: "SaaS Platforms",
     description: "Complete software-as-a-service solutions",
     color: "from-orange-500 to-red-500",
+    href: "/services/custom-software-development",
   },
   {
     icon: Brain,
     title: "AI Integration",
     description: "Intelligent automation and machine learning",
     color: "from-indigo-500 to-purple-500",
+    href: "/services/ai-automation",
   },
   {
     icon: Users,
     title: "IT Consulting",
     description: "Strategic technology guidance and optimization",
     color: "from-pink-500 to-rose-500",
+    href: "/services/software-outsourcing",
   },
 ]
 
@@ -52,13 +59,9 @@ export default function ServicesHero() {
   const sectionRef = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const cardsRef = useRef<HTMLDivElement[]>([])
+  const cardsRef = useRef<HTMLAnchorElement[]>([])
   const shapesRef = useRef<HTMLDivElement[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
-
   useEffect(() => {
-    setIsLoaded(false)
-
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter(Boolean)
       const shapes = shapesRef.current.filter(Boolean)
@@ -92,7 +95,6 @@ export default function ServicesHero() {
       // Create main timeline
       const mainTl = gsap.timeline({
         paused: true,
-        onComplete: () => setIsLoaded(true),
       })
 
       // Animate shapes
@@ -174,7 +176,6 @@ export default function ServicesHero() {
 
     return () => {
       ctx.revert()
-      setIsLoaded(false)
     }
   }, [])
 
@@ -240,8 +241,9 @@ export default function ServicesHero() {
           {services.map((service, index) => {
             const IconComponent = service.icon
             return (
-              <div
+              <Link
                 key={service.title}
+                href={service.href}
                 ref={(el) => {
                   if (el) cardsRef.current[index] = el
                 }}
@@ -264,7 +266,7 @@ export default function ServicesHero() {
                     {service.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>

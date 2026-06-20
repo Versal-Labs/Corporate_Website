@@ -1,52 +1,21 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ScrollProgress from "@/components/scroll-progress"
 import { getProducts, type Product } from "@/lib/sanity"
 import { ProductCard } from "@/components/product-card"
+import { createPageMetadata } from "@/lib/seo"
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+export const revalidate = 3600
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getProducts()
-        setProducts(data)
-      } catch (error) {
-        console.error("Error loading products:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+export const metadata = createPageMetadata({
+  title: "Software Products & SaaS Platforms from Sri Lanka",
+  description: "Explore SaaS, ERP, mobile, and web products designed and engineered by Versal Labs in Colombo, Sri Lanka.",
+  path: "/products",
+  keywords: ["software products Sri Lanka", "SaaS company Sri Lanka", "business software Colombo"],
+})
 
-    load()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen">
-        <ScrollProgress />
-        <Navbar />
-        <div className="pt-32 pb-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-                Our Products
-              </h1>
-              <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    )
-  }
+export default async function ProductsPage() {
+  const products: Product[] = await getProducts()
 
   return (
     <div className="bg-gray-900 text-white min-h-screen">

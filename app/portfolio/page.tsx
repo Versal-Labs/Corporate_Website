@@ -1,51 +1,21 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ScrollProgress from "@/components/scroll-progress"
 import { getPortfolioItems, type PortfolioItem } from "@/lib/sanity"
 import { PortfolioCard } from "@/components/portfolio-card"
+import { createPageMetadata } from "@/lib/seo"
 
-export default function PortfolioPage() {
-  const [items, setItems] = useState<PortfolioItem[]>([])
-  const [loading, setLoading] = useState(true)
+export const revalidate = 3600
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getPortfolioItems()
-        setItems(data)
-      } catch (err) {
-        console.error("Error loading portfolio items:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-  }, [])
+export const metadata = createPageMetadata({
+  title: "Software Development Portfolio & Case Studies",
+  description: "See software, ERP, mobile, web, and AI projects delivered by Versal Labs for businesses in Sri Lanka and beyond.",
+  path: "/portfolio",
+  keywords: ["software development portfolio Sri Lanka", "software case studies", "Versal Labs projects"],
+})
 
-  if (loading) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen">
-        <ScrollProgress />
-        <Navbar />
-        <div className="pt-32 pb-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-                Our Portfolio
-              </h1>
-              <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    )
-  }
+export default async function PortfolioPage() {
+  const items: PortfolioItem[] = await getPortfolioItems()
 
   return (
     <div className="bg-gray-900 text-white min-h-screen">

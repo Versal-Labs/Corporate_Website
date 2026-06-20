@@ -10,7 +10,13 @@ const contactSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters').max(1000, 'Message is too long'),
 })
 
-export async function submitContactForm(prevState: any, formData: FormData) {
+export type ContactFormState = {
+  success: boolean
+  message: string
+  errors: Partial<Record<"name" | "email" | "company" | "message", string>>
+}
+
+export async function submitContactForm(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
   try {
     // Extract form data
     const rawData = {
@@ -42,10 +48,10 @@ export async function submitContactForm(prevState: any, formData: FormData) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Return validation errors
-      const errors: Record<string, string> = {}
+      const errors: ContactFormState["errors"] = {}
       error.errors.forEach((err) => {
         if (err.path[0]) {
-          errors[err.path[0] as string] = err.message
+          errors[err.path[0] as keyof ContactFormState["errors"]] = err.message
         }
       })
 

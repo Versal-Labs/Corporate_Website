@@ -1,42 +1,26 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Calendar, Clock, ArrowRight, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getRecentPosts, type Post } from "@/lib/sanity"
+import type { Post } from "@/lib/sanity"
 import { urlForImage } from "../sanity/versal-labs/lib/image"
 import Link from "next/link"
+import { canonicalBlogSlug } from "@/lib/blog"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-export default function RecentBlogs() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
-
+export default function RecentBlogs({ initialPosts }: { initialPosts: Post[] }) {
+  const posts = initialPosts
   const sectionRef = useRef<HTMLElement>(null)
-  const cardsRef = useRef<HTMLDivElement[]>([])
+  const cardsRef = useRef<HTMLAnchorElement[]>([])
 
   useEffect(() => {
-    async function loadPosts() {
-      try {
-        const recentPosts = await getRecentPosts()
-        setPosts(recentPosts)
-      } catch (error) {
-        console.error("Error loading recent posts:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadPosts()
-  }, [])
-
-  useEffect(() => {
-    if (loading || posts.length === 0) return
+    if (posts.length === 0) return
 
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter(Boolean)
@@ -67,24 +51,7 @@ export default function RecentBlogs() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [loading, posts])
-
-  if (loading) {
-    return (
-      <section className="py-20 bg-gray-800/20">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Latest Insights
-            </h2>
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
+  }, [posts])
 
   if (posts.length === 0) {
     return null // Don't show section if no posts
@@ -106,7 +73,7 @@ export default function RecentBlogs() {
           {posts.map((post, index) => (
             <Link
               key={post._id}
-              href={`/blog/${post.slug}`}
+              href={`/blog/${canonicalBlogSlug(post.slug)}`}
               ref={(el) => {
                 if (el) cardsRef.current[index] = el
               }}
@@ -181,11 +148,13 @@ export default function RecentBlogs() {
 
         <div className="text-center mt-12">
           <Button
-            onClick={() => (window.location.href = "/blog")}
+            asChild
             className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300"
           >
-            View All Articles
-            <ArrowRight className="ml-2 w-4 h-4" />
+            <Link href="/blog">
+              View All Articles
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
           </Button>
         </div>
       </div>

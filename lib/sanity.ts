@@ -50,7 +50,7 @@ export async function getPosts() {
   }
 
   try {
-    const data = await fetchWithRetry(() => client.fetch(POSTS_QUERY))
+    const data = await fetchWithRetry(() => client!.fetch(POSTS_QUERY))
     return data
   } catch (error: any) {
     console.error("Error fetching posts:", error)
@@ -76,7 +76,7 @@ export async function getPost(slug: string) {
   }
 
   try {
-    const data = await fetchWithRetry(() => client.fetch(POST_QUERY, { slug }))
+    const data = await fetchWithRetry(() => client!.fetch(POST_QUERY, { slug }))
     return data
   } catch (error: any) {
     console.error("Error fetching post:", error)
@@ -101,7 +101,7 @@ export async function getRecentPosts() {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(RECENT_POSTS_QUERY))
+    return await fetchWithRetry(() => client!.fetch(RECENT_POSTS_QUERY))
   } catch (error: any) {
     console.error("Error fetching recent posts:", error)
 
@@ -126,7 +126,7 @@ export async function getPortfolioItems() {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(PORTFOLIO_QUERY))
+    return await fetchWithRetry(() => client!.fetch(PORTFOLIO_QUERY))
   } catch (error: any) {
     console.error("Error fetching portfolio items:", error)
 
@@ -150,7 +150,7 @@ export async function getPortfolioItem(slug: string) {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(PORTFOLIO_ITEM_QUERY, { slug }))
+    return await fetchWithRetry(() => client!.fetch(PORTFOLIO_ITEM_QUERY, { slug }))
   } catch (error: any) {
     console.error("Error fetching portfolio item:", error)
 
@@ -174,7 +174,7 @@ export async function getFeaturedPortfolio() {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(FEATURED_PORTFOLIO_QUERY))
+    return await fetchWithRetry(() => client!.fetch(FEATURED_PORTFOLIO_QUERY))
   } catch (error: any) {
     console.error("Error fetching featured portfolio:", error)
 
@@ -199,7 +199,7 @@ export async function getProducts() {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(PRODUCTS_QUERY))
+    return await fetchWithRetry(() => client!.fetch(PRODUCTS_QUERY))
   } catch (error: any) {
     console.error("Error fetching products:", error)
 
@@ -223,7 +223,7 @@ export async function getProduct(slug: string) {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(PRODUCT_QUERY, { slug }))
+    return await fetchWithRetry(() => client!.fetch(PRODUCT_QUERY, { slug }))
   } catch (error: any) {
     console.error("Error fetching product:", error)
 
@@ -247,7 +247,7 @@ export async function getFeaturedProducts() {
   }
 
   try {
-    const data = await fetchWithRetry(() => client.fetch(FEATURED_PRODUCTS_QUERY))
+    const data = await fetchWithRetry(() => client!.fetch(FEATURED_PRODUCTS_QUERY))
     return data.length > 0 ? data : getMockProductsData()
   } catch (error: any) {
     console.error("Error fetching featured products:", error)
@@ -273,7 +273,7 @@ export async function getCareers() {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(CAREERS_QUERY))
+    return await fetchWithRetry(() => client!.fetch(CAREERS_QUERY))
   } catch (error: any) {
     console.error("Error fetching careers:", error)
 
@@ -297,7 +297,7 @@ export async function getCareer(slug: string) {
   }
 
   try {
-    return await fetchWithRetry(() => client.fetch(CAREER_QUERY, { slug }))
+    return await fetchWithRetry(() => client!.fetch(CAREER_QUERY, { slug }))
   } catch (error: any) {
     console.error("Error fetching career:", error)
 
@@ -386,6 +386,7 @@ function getMockProductsData(): Product[] {
 // Types
 export interface Post {
   _id: string
+  _updatedAt?: string
   title: string
   slug: string
   author?: {
@@ -395,6 +396,7 @@ export interface Post {
   }
   mainImage?: any
   categories?: Array<{
+    _id: string
     title: string
     slug: string
   }>
@@ -429,6 +431,7 @@ export interface Product {
   title: string
   slug: { current: string }
   mainImage?: any
+  image?: any
   gallery?: any[]
   description?: string
   content: any

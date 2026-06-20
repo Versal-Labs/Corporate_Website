@@ -1,42 +1,25 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ExternalLink, Star, Calendar, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getFeaturedProducts, type Product } from "@/lib/sanity"
+import type { Product } from "@/lib/sanity"
 import { urlForImage } from "../sanity/versal-labs/lib/image"
 import { ProductCard } from "@/components/product-card"
+import Link from "next/link"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-export default function ProductsSection() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-
+export default function ProductsSection({ initialProducts }: { initialProducts: Product[] }) {
+  const products = initialProducts
   const sectionRef = useRef<HTMLElement>(null)
   const cardsRef = useRef<HTMLDivElement[]>([])
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const items = await getFeaturedProducts()
-        setProducts(items)
-      } catch (error) {
-        console.error("Error loading products:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadProducts()
-  }, [])
-
-  useEffect(() => {
-    if (loading || products.length === 0) return
+    if (products.length === 0) return
 
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter(Boolean)
@@ -65,24 +48,7 @@ export default function ProductsSection() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [loading, products])
-
-  if (loading) {
-    return (
-      <section id="products" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-              Our Products
-            </h2>
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
+  }, [products])
 
   if (products.length === 0) {
     return (
@@ -128,7 +94,10 @@ export default function ProductsSection() {
                     {product.image && (
                       <img
                         src={urlForImage(product.image)?.width(600).height(400).url() || "/placeholder.svg"}
-                        alt={product.image || product.title}
+                        alt={(product.image as any)?.alt || product.title}
+                        width={600}
+                        height={400}
+                        loading="lazy"
                         className="w-full h-64 lg:h-80 object-cover rounded-xl shadow-2xl group-hover:scale-105 transition-transform duration-700"
                       />
                     )}
@@ -146,10 +115,10 @@ export default function ProductsSection() {
 
         <div className="text-center mt-16">
           <Button
-            onClick={() => (window.location.href = "/products")}
+            asChild
             className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300"
           >
-            View All Products
+            <Link href="/products">View All Products</Link>
           </Button>
         </div>
       </div>
