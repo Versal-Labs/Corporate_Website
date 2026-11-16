@@ -1,3 +1,4 @@
+import { withNexusFlowPortfolio, withNexusFlowProduct } from "@/lib/nexus-flow"
 import { client } from "../sanity/versal-labs/lib/client"
 import {
   POSTS_QUERY,
@@ -114,7 +115,7 @@ export async function getRecentPosts() {
 }
 
 // Portfolio functions
-export async function getPortfolioItems() {
+async function getCmsPortfolioItems() {
   if (!isSanityConfigured()) {
     console.warn("Sanity not configured, returning empty portfolio array")
     return []
@@ -162,7 +163,7 @@ export async function getPortfolioItem(slug: string) {
   }
 }
 
-export async function getFeaturedPortfolio() {
+async function getCmsFeaturedPortfolio() {
   if (!isSanityConfigured()) {
     console.warn("Sanity not configured, returning mock portfolio data")
     return []
@@ -187,7 +188,7 @@ export async function getFeaturedPortfolio() {
 }
 
 // Product functions
-export async function getProducts() {
+async function getCmsProducts() {
   if (!isSanityConfigured()) {
     console.warn("Sanity not configured, returning empty products array")
     return []
@@ -235,7 +236,7 @@ export async function getProduct(slug: string) {
   }
 }
 
-export async function getFeaturedProducts() {
+async function getCmsFeaturedProducts() {
   if (!isSanityConfigured()) {
     console.warn("Sanity not configured, returning mock products data")
     return getMockProductsData()
@@ -307,6 +308,23 @@ export async function getCareer(slug: string) {
 
     return null
   }
+}
+
+// Keep the Nexus Flow landing page discoverable, including when CMS data is unavailable.
+export async function getProducts(): Promise<Product[]> {
+  return withNexusFlowProduct(await getCmsProducts())
+}
+
+export async function getFeaturedProducts(): Promise<Product[]> {
+  return withNexusFlowProduct(await getCmsFeaturedProducts())
+}
+
+export async function getPortfolioItems(): Promise<PortfolioItem[]> {
+  return withNexusFlowPortfolio(await getCmsPortfolioItems())
+}
+
+export async function getFeaturedPortfolio(): Promise<PortfolioItem[]> {
+  return withNexusFlowPortfolio(await getCmsFeaturedPortfolio())
 }
 
 // Mock data functions for when Sanity is not configured

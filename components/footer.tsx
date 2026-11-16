@@ -12,6 +12,7 @@ const serviceLinks = [
 ] as const
 
 const companyLinks = [
+  ["Nexus Flow ERP", "/products/nexus-flow"],
   ["About Us", "/#about"],
   ["Portfolio", "/portfolio"],
   ["Contact", "/#contact"],

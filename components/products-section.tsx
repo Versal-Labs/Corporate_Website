@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Button } from "@/components/ui/button"
 import type { Product } from "@/lib/sanity"
 import { urlForImage } from "../sanity/versal-labs/lib/image"
+import NexusFlowVisual from "@/components/nexus-flow-visual"
 import { ProductCard } from "@/components/product-card"
 import Link from "next/link"
 
@@ -91,7 +92,7 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
               <div className="flex-1">
                 <div className="running-border product-card cursor-pointer">
                   <div className="running-border-content relative group">
-                    {product.image && (
+                    {product._id === "nexus-flow" ? <NexusFlowVisual /> : product.image && (
                       <img
                         src={urlForImage(product.image)?.width(600).height(400).url() || "/placeholder.svg"}
                         alt={(product.image as any)?.alt || product.title}

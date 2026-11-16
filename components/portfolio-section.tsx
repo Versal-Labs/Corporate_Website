@@ -176,7 +176,7 @@ export default function PortfolioSection({ initialItems }: { initialItems: Portf
                       size="sm"
                       className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-xs"
                     >
-                      <a href={item.projectUrl} target="_blank" rel="noopener noreferrer"><ExternalLink className="w-3 h-3 mr-1" />View {item.title}</a>
+                      <a href={item.projectUrl} target={item.projectUrl.startsWith("/") ? undefined : "_blank"} rel={item.projectUrl.startsWith("/") ? undefined : "noopener noreferrer"}><ExternalLink className="w-3 h-3 mr-1" />{item.projectUrl.startsWith("/") ? "Explore " + item.title : "View " + item.title}</a>
                     </Button>
                   )}
                   {item.githubUrl && (

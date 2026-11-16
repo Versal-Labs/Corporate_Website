@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button"
 import { gsap } from "gsap"
 import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollToPlugin)
 }
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -51,6 +53,10 @@ export default function Navbar() {
     { name: "About", href: "/#about", section: "about" },
     { name: "Contact", href: "/#contact", section: "contact" },
   ]
+
+  const isItemActive = (item: { href: string; section?: string }) => item.section
+    ? pathname === "/" && activeSection === item.section
+    : pathname === item.href || pathname.startsWith(item.href + "/")
 
   const scrollToSection = (sectionId: string) => {
     // Check if we're on the home page
@@ -113,11 +119,11 @@ export default function Navbar() {
                 href={item.href}
                 onClick={(event) => handleSectionLink(event, item.section)}
                 className={`text-gray-300 hover:text-white transition-colors duration-300 hover:scale-105 transform relative magnetic-btn ${
-                  item.section && activeSection === item.section ? "text-white" : ""
+                  isItemActive(item) ? "text-white" : ""
                 }`}
               >
                 {item.name}
-                {item.section && activeSection === item.section && (
+                {isItemActive(item) && (
                   <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full" />
                 )}
               </Link>
@@ -148,7 +154,7 @@ export default function Navbar() {
                   href={item.href}
                   onClick={(event) => handleSectionLink(event, item.section)}
                   className={`text-left text-gray-300 hover:text-white transition-colors duration-300 py-2 magnetic-btn ${
-                    item.section && activeSection === item.section ? "text-white border-l-2 border-blue-500 pl-3" : ""
+                    isItemActive(item) ? "text-white border-l-2 border-blue-500 pl-3" : ""
                   }`}
                 >
                   {item.name}

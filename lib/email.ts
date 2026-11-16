@@ -7,15 +7,29 @@ export interface ContactFormData {
   email: string
   company?: string
   message: string
+  subject?: string
 }
 
-export async function sendContactEmail(data: ContactFormData) {
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]!)
+}
+
+export async function sendContactEmail(rawData: ContactFormData) {
+  const data = {
+    ...rawData,
+    name: escapeHtml(rawData.name),
+    email: escapeHtml(rawData.email),
+    company: rawData.company ? escapeHtml(rawData.company) : undefined,
+    message: escapeHtml(rawData.message),
+  }
   try {
     // Send email to you (the business owner)
     const { data: emailData, error } = await resend.emails.send({
       from: 'Versal Labs Contact <mohamed.sakeel@versallabs.lk>',
       to: ['mohamed.sakeel@versallabs.lk'], // Your business email
-      subject: `New Contact Form Submission from ${data.name}`,
+      subject: rawData.subject || `New Contact Form Submission from ${rawData.name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); padding: 20px; border-radius: 8px 8px 0 0;">
@@ -49,7 +63,7 @@ export async function sendContactEmail(data: ContactFormData) {
           </div>
         </div>
       `,
-      replyTo: data.email, // This allows you to reply directly to the sender
+      replyTo: rawData.email, // This allows you to reply directly to the sender
     })
 
     if (error) {
@@ -60,7 +74,7 @@ export async function sendContactEmail(data: ContactFormData) {
     // Send confirmation email to the user
     await resend.emails.send({
       from: 'Versal Labs <mohamed.sakeel@versallabs.lk>',
-      to: [data.email],
+      to: [rawData.email],
       subject: 'Thank you for contacting Versal Labs',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

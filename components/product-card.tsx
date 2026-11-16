@@ -71,7 +71,9 @@ export function ProductCard({ product, showImage = true }: ProductCardProps) {
           {product.category && (
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 bg-green-400 rounded-full" />
-              {product.category === "saas"
+              {product.category === "erp"
+                ? "ERP Platform"
+                : product.category === "saas"
                 ? "SaaS Platform"
                 : product.category === "mobile"
                   ? "Mobile App"
@@ -99,7 +101,7 @@ export function ProductCard({ product, showImage = true }: ProductCardProps) {
         <div className="flex gap-4 pt-2">
           {product.productUrl && (
             <Button asChild className="action-button bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 group relative overflow-hidden">
-              <a href={product.productUrl} target="_blank" rel="noopener noreferrer" className="relative z-10 flex items-center">
+              <a href={product.productUrl} target={product.productUrl.startsWith("/") ? undefined : "_blank"} rel={product.productUrl.startsWith("/") ? undefined : "noopener noreferrer"} className="relative z-10 flex items-center">
                 Learn about {product.title}
                 <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </a>
